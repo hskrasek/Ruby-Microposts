@@ -9,4 +9,19 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Microposts::Application.config.secret_key_base = '42579e3e340d4f4338fbcc1821a82587074f8adb12a27a12c6f19bf30e9b7c8cfe51cc66d07c4823615c2a21542446871774b469bf35bbe96db1012b684326e6'
+require 'securerandom'
+
+def secure_token
+  token_file = Rails.root.join('.secret')
+  if File.exist?(token_file)
+    # Use the existing token.
+    File.read(token_file).chomp
+  else
+    # Generate a new token and store it in token_file.
+    token = SecureRandom.hex(64)
+    File.write(token_file, token)
+    token
+  end
+end
+
+ Microposts::Application.config.secret_key_base = secure_token
