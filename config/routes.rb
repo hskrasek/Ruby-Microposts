@@ -7,8 +7,13 @@ Microposts::Application.routes.draw do
   match '/about', to: 'static_pages#about', via: 'get'
 
   resources :microposts, only: [:create, :destroy]
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   resources :sessions, only: [:new, :create, :destroy]
+  resources :relationships, only: [:create, :destroy]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
